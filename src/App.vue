@@ -75,8 +75,6 @@
           </div>
         </div>
       </div>
-      <!-- {{ slip.slice(0, 2) }} -->
-      <!-- {{ getNumbers }} -->
     </div>
   </main>
 </template>
@@ -90,8 +88,6 @@ const ELEMENT_COUNT = 80;
 type Slip = Section[];
 type Section = Element[];
 type Element = { checked: boolean; value: number; won: boolean };
-
-type Coupon = number[][];
 
 const slip = ref<Slip>(bSlip());
 
