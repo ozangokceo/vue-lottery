@@ -20,6 +20,17 @@
         class="generate-button">
         Generate
       </div>
+      <div style="width: 50px; display: flex; gap: 5px; margin-left: 100px; color: white">
+        <input
+          style="width: 70px"
+          :checked="tick"
+          @change="() => (tick = !tick)"
+          type="checkbox"
+          name="tick"
+          id="tick" />
+        <label for="tick">Tick</label>
+      </div>
+      <!-- tick: {{ tick }} -->
     </div>
     <div style="display: flex; align-items: center; gap: 64px">
       <div class="container">
@@ -39,8 +50,15 @@
               <div
                 v-if="elementIndex + 1 <= 69"
                 class="box"
-                :style="{ backgroundColor: element.checked ? '#00ff0075' : 'unset' }"
-                @click="toggle(element, section)"></div>
+                :style="{ backgroundColor: !tick && element.checked ? '#00ff0075' : 'unset' }"
+                @click="toggle(element, section)">
+                <img
+                  v-if="tick && element.checked"
+                  src="./assets/tick.png"
+                  width="20"
+                  height="20"
+                  alt="" />
+              </div>
               <div
                 v-else-if="elementIndex + 1 > 69 && elementIndex + 1 < 77"
                 class="box"></div>
@@ -91,6 +109,8 @@ type Element = { checked: boolean; value: number; won: boolean };
 
 const slip = ref<Slip>(bSlip());
 
+const tick = ref<boolean>(false);
+
 const magicNumbers = ref<number[]>([0, 0, 0, 0, 0, 0]);
 
 function bSlip() {
@@ -119,7 +139,8 @@ function toggle(element: Element, section: Section) {
 }
 
 function setRandom(sectionIndex: number) {
-  const random = generateRandom();
+  const random = generateRandomSequence();
+  console.log('random: ', random);
   slip.value[sectionIndex].forEach((element) => {
     if (random.includes(element.value)) element.checked = true;
     else element.checked = false;
@@ -139,14 +160,23 @@ function checkNumbers() {
 }
 
 function generateNumbers() {
-  magicNumbers.value = generateRandom();
+  magicNumbers.value = generateRandomSequence();
   checkNumbers();
 }
 
-function generateRandom() {
-  let numbers = [null, null, null, null, null, null];
-  // console.log(numbers.map(() => Math.floor(Math.random() * 70)).sort((a, b) => a - b));
-  return numbers.map(() => Math.floor(Math.random() * 70)).sort((a, b) => a - b);
+function bRandomNumber() {
+  return Math.floor(Math.random() * 69) + 1;
+}
+
+function generateRandomSequence() {
+  const numbers: number[] = [];
+
+  while (numbers.length < 6) {
+    const random = bRandomNumber();
+    if (!numbers.includes(random)) numbers.push(random);
+  }
+
+  return numbers.sort((a, b) => a - b);
 }
 
 // Computed..
